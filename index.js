@@ -1,55 +1,93 @@
-//servidor pra enviar mails a través do contact form --- render
-
 import express from 'express';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 import cors from 'cors';
 
-
-//mais seguro a traves de um .env file para os credentials
 dotenv.config();
 
 const app = express();
 
-app.use(cors()); //permite requests do github
+// Enhanced CORS configuration
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:5173',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:5173',
+    'https://your-frontend-domain.vercel.app', // Add your actual frontend domain
+    'https://your-frontend-domain.netlify.app' // Add your actual frontend domain
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+  credentials: false
+}));
+
+// Handle preflight requests explicitly
+app.options('*', cors());
+
 app.use(express.json());
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({ extended: true }));
 
-//Contact form 
+// Your existing email route...
 app.post('/send-email', async (req, res) => {
-    const {name, email, phone, project} = req.body;
+  const { name, email, phone, project } = req.body;
 
-    //gmail transporter
-    const transporter = nodemailer.createTransport({
-        service:'gmail', 
-        auth:{
-        user: process.env.EMAIL_USER,  //vai buscar do dotenv
-        pass: process.env.EMAIL_PASS
-        }
-    }); 
-    //set up do email
-    const mailOptions = {
-        from:email,
-        to: process.env.EMAIL_USER, //mandamos pra nos mesmos (creds > .env)
-        subject: `Nova Proposta de Projecto Recebida de ${name}`, 
-        text: `
-        Nome: ${name}
-        Email: ${email}
-        Phone : ${phone}
-        Message: ${project}
-        `, 
-    };
-try {
+  // Input validation
+  if (!name || !email || !phone || !project) {
+    return res.status(400).json({ 
+      success: false, 
+      message: 'Nome, email e mensagem são obrigatórios.' 
+    });
+  }
+
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
+    }
+  });
+
+  const mailOptions = {
+    from: email,
+    to: process.env.EMAIL_USER,
+    subject: `Nova Proposta de Projecto Recebida de ${name}`,
+    text: `
+    Nome: ${name}
+    Email: ${email}
+    Telefone: ${phone}
+    Mensagem: ${project}
+    `,
+    html: `
+    <h3>Nova Proposta de Projecto</h3>
+    <p><strong>Nome:</strong> ${name}</p>
+    <p><strong>Email:</strong> ${email}</p>
+    <p><strong>Telefone:</strong> ${phone}</p>
+    <p><strong>Mensagem:</strong></p>
+    <p>${project.replace(/\n/g, '<br>')}</p>
+    `
+  };
+
+  try {
     await transporter.sendMail(mailOptions);
     res.status(200).json({ success: true, message: 'Email Enviado!' });
-} catch (err) { 
-    console.error('Erro ao enviar o email:', err); 
-    res.status(500).json({ success: false, message: 'Email Nao enviado.' });
-}
+  } catch (err) {
+    console.error('Erro ao enviar o email:', err);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Erro interno do servidor. Email não enviado.' 
+    });
+  }
 });
 
-//lançamos server
+// Add a health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'OK', 
+    service: 'Email Server',
+    timestamp: new Date().toISOString()
+  });
+});
 
-// Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
