@@ -19,7 +19,7 @@ app.use(cors({
   allowedHeaders: ["Content-Type"]
 })); 
 
-app.options(/.*/, cors()); 
+app.options("/send-email", cors()); 
 
 
 app.use(express.json());
