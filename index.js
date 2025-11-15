@@ -19,11 +19,18 @@ app.use(cors({
   allowedHeaders: ["Content-Type"]
 })); 
 
-app.options("/send-email", cors()); 
 
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
+
+//cors is driving me crazy
+app.options("/send-email", (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*"); // necessary
+  res.header("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  res.sendStatus(200); // send 200 instead of 204
+});
 
 //Contact form 
 app.post('/send-email', async (req, res) => {
