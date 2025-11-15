@@ -52,7 +52,7 @@ app.post('/send-email', async (req, res) => {
     `
   };
 try {
-    await transporter.sendMail(mailOptions);
+    await sgMail.sendMail(msg);
     res.status(200).json({ success: true, message: 'Email Enviado!' });
 } catch (err) { 
     console.error('Erro ao enviar o email:', err); 
