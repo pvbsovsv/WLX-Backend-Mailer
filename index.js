@@ -14,10 +14,12 @@ const app = express();
 
 //cors
 app.use(cors({
-  origin: ["https://wlx-backend-mailer.onrender.com/send-email"],
-  methods: ["POST", "OPTIONS"],
+  origin: ["*"],
+  methods: ["GET", "POST", "OPTIONS"],
   allowedHeaders: ["Content-Type"]
 })); 
+
+app.options("*", cors()); 
 
 
 app.use(express.json());
