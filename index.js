@@ -11,7 +11,11 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors()); //permite requests do github
+
+//cors
+app.use(cors()); 
+app.options('send-email', cors());
+
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
