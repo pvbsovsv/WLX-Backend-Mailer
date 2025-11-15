@@ -11,7 +11,7 @@ dotenv.config();
 
 const app = express();
 
-//o render free nao me permite manda mails, uso rest api do sendgrid
+//o render free nao me permite manda mails, uso restapi do sendgrid
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 //cors
