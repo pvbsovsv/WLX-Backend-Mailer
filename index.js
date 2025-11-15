@@ -14,7 +14,7 @@ const app = express();
 
 //cors
 app.use(cors({
-  origin: ["https://<your-github-username>.github.io"],
+  origin: ["https://wlx-backend-mailer.onrender.com/send-email"],
   methods: ["POST", "OPTIONS"],
   allowedHeaders: ["Content-Type"]
 })); 
