@@ -52,10 +52,10 @@ app.post('/send-email', async (req, res) => {
     `
   };
 try {
-    await sgMail.sendMail(msg);
+    await sgMail.send(msg);
     res.status(200).json({ success: true, message: 'Email Enviado!' });
 } catch (err) { 
-    console.error('Erro ao enviar o email:', err); 
+    console.error('Erro ao enviar o email:', err.response ? err.response.body : err); 
     res.status(500).json({ success: false, message: 'Email Nao enviado.' });
 }
 });
