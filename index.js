@@ -14,10 +14,12 @@ const app = express();
 
 //cors
 app.use(cors()); 
-app.options('send-email', cors());
+
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
+
+app.options('send-email', cors());
 
 //Contact form 
 app.post('/send-email', async (req, res) => {
