@@ -41,7 +41,7 @@ app.post('/send-email', async (req, res) => {
     //sendGrid rest api nao trabalha com transporter
    const msg = {
     to: process.env.EMAIL_USER,
-    from: process.env.EMAIL_USER,  
+    from: "pvbsovsv@gmail.com",  
     replyTo: email,
     subject: `Nova Proposta de Projecto Recebida de ${name}`,
     text: `
