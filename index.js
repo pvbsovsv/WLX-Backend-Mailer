@@ -14,7 +14,7 @@ const app = express();
 
 //cors
 app.use(cors({
-  origin: ["*"],
+  origin: ["https://pvbsovsv.github.io"],
   methods: ["GET", "POST", "OPTIONS"],
   allowedHeaders: ["Content-Type"]
 })); 
@@ -26,13 +26,13 @@ app.use(express.urlencoded({extended:true}));
 
 //cors is driving me crazy
 app.options("/send-email", (req, res) => {
-  res.header("Access-Control-Allow-Origin", "*"); // necessary
+  res.header("Access-Control-Allow-Origin", "https://pvbsovsv.github.io"); // necessary
   res.header("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.header("Access-Control-Allow-Headers", "Content-Type");
-  res.sendStatus(200); // send 200 instead of 204
+  res.sendStatus(200); 
 });
 
-//Contact form 
+//Contact form post
 app.post('/send-email', async (req, res) => {
     const {name, email, phone, project} = req.body;
 
