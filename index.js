@@ -13,7 +13,11 @@ const app = express();
 
 
 //cors
-app.use(cors()); 
+app.use(cors({
+  origin: ["https://<your-github-username>.github.io"],
+  methods: ["POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type"]
+})); 
 
 
 app.use(express.json());
