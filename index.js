@@ -25,8 +25,6 @@ app.options("*", cors());
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
-app.options('send-email', cors());
-
 //Contact form 
 app.post('/send-email', async (req, res) => {
     const {name, email, phone, project} = req.body;
